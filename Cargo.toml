@@ -1,0 +1,12 @@
+[package]
+name = "colavm"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+[profile.release]
+opt-level = "z"     # Optimize explicitly for binary size instead of pure speed
+lto = true          # Enable Link-Time Optimization (strips out unused standard library code)
+codegen-units = 1   # Reduces parallel compilation to let the compiler optimize harder
+panic = "abort"     # Strips out the heavy stack unwinding layout; crashes immediately on panic
