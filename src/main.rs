@@ -80,7 +80,7 @@ fn pop(stack: &mut Vec<i32>, pc: usize) -> i32 {
     match stack.pop() {
         Some(x) => x,
         None => {
-            print_err("stack underflow", pc);
+            print_err("unexpected stack underflow", pc);
             0
         }
     }
@@ -134,22 +134,8 @@ fn main() {
             }
             Some(Opcode::Add) => {
                 if stack.len() >= 2 {
-                    let mut a: i32 = 0;
-                    let mut b: i32 = 0;
-
-                    match stack.pop() {
-                        Some(x) => a = x,
-                        None => {
-                            print_err("stack underflow", pc);
-                        }
-                    }
-
-                    match stack.pop() {
-                        Some(x) => b = x,
-                        None => {
-                            print_err("stack underflow", pc);
-                        }
-                    }
+                    let mut a: i32 = pop(&mut stack, pc);
+                    let mut b: i32 = pop(&mut stack, pc);
 
                     stack.push(a + b);
                 } else {
@@ -159,22 +145,8 @@ fn main() {
             }
             Some(Opcode::Sub) => {
                 if stack.len() >= 2 {
-                    let mut a: i32 = 0;
-                    let mut b: i32 = 0;
-
-                    match stack.pop() {
-                        Some(x) => a = x,
-                        None => {
-                            print_err("stack underflow", pc);
-                        }
-                    }
-
-                    match stack.pop() {
-                        Some(x) => b = x,
-                        None => {
-                            print_err("stack underflow", pc);
-                        }
-                    }
+                    let mut a: i32 = pop(&mut stack, pc);
+                    let mut b: i32 = pop(&mut stack, pc);
 
                     stack.push(b - a);
                 } else {
@@ -184,22 +156,8 @@ fn main() {
             }
             Some(Opcode::Mul) => {
                 if stack.len() >= 2 {
-                    let mut a: i32 = 0;
-                    let mut b: i32 = 0;
-
-                    match stack.pop() {
-                        Some(x) => a = x,
-                        None => {
-                            print_err("stack underflow", pc);
-                        }
-                    }
-
-                    match stack.pop() {
-                        Some(x) => b = x,
-                        None => {
-                            print_err("stack underflow", pc);
-                        }
-                    }
+                    let mut a: i32 = pop(&mut stack, pc);
+                    let mut b: i32 = pop(&mut stack, pc);
 
                     stack.push(a * b);
                 } else {
@@ -209,22 +167,8 @@ fn main() {
             }
             Some(Opcode::Div) => {
                 if stack.len() >= 2 {
-                    let mut a: i32 = 0;
-                    let mut b: i32 = 0;
-
-                    match stack.pop() {
-                        Some(x) => a = x,
-                        None => {
-                            print_err("stack underflow", pc);
-                        }
-                    }
-
-                    match stack.pop() {
-                        Some(x) => b = x,
-                        None => {
-                            print_err("stack underflow", pc);
-                        }
-                    }
+                    let mut a: i32 = pop(&mut stack, pc);
+                    let mut b: i32 = pop(&mut stack, pc);
 
                     stack.push(b / a);
                 } else {
@@ -234,22 +178,8 @@ fn main() {
             }
             Some(Opcode::Mod) => {
                 if stack.len() >= 2 {
-                    let mut a: i32 = 0;
-                    let mut b: i32 = 0;
-
-                    match stack.pop() {
-                        Some(x) => a = x,
-                        None => {
-                            print_err("stack underflow", pc);
-                        }
-                    }
-
-                    match stack.pop() {
-                        Some(x) => b = x,
-                        None => {
-                            print_err("stack underflow", pc);
-                        }
-                    }
+                    let mut a: i32 = pop(&mut stack, pc);
+                    let mut b: i32 = pop(&mut stack, pc);
 
                     stack.push(b % a);
                 } else {
@@ -269,10 +199,7 @@ fn main() {
                 let mut chars_to_print: Vec<char> = Vec::new();
 
                 while length != 0 {
-                    match stack.pop() {
-                        Some(x) => chars_to_print.push((x as u8) as char),
-                        None => print_err("unexpected underflow", pc),
-                    }
+                    chars_to_print.push((pop(&mut stack, pc) as u8) as char);
                     length -= 1;
                 }
 
@@ -337,14 +264,7 @@ fn main() {
                     let new_pc = i32::from_le_bytes(bytes) as usize;
 
                     if stack.len() >= 1 {
-                        let mut x: i32 = 0;
-
-                        match stack.pop() {
-                            Some(stack_top) => x = stack_top,
-                            None => {
-                                print_err("unexpected stack underflow", pc);
-                            }
-                        }
+                        let mut x: i32 = pop(&mut stack, pc);
 
                         if x == 0 {
                             pc = new_pc as usize;
@@ -364,22 +284,8 @@ fn main() {
                     let new_pc = i32::from_le_bytes(bytes) as usize;
 
                     if stack.len() >= 1 {
-                        let mut a: i32 = 0;
-                        let mut b: i32 = 0;
-
-                        match stack.pop() {
-                            Some(stack_top) => a = stack_top,
-                            None => {
-                                print_err("unexpected stack underflow", pc);
-                            }
-                        }
-
-                        match stack.pop() {
-                            Some(stack_top) => b = stack_top,
-                            None => {
-                                print_err("unexpected stack underflow", pc);
-                            }
-                        }
+                        let mut a: i32 = pop(&mut stack, pc);
+                        let mut b: i32 = pop(&mut stack, pc);
 
                         if b == a {
                             pc = new_pc as usize;
@@ -399,22 +305,8 @@ fn main() {
                     let new_pc = i32::from_le_bytes(bytes) as usize;
 
                     if stack.len() >= 1 {
-                        let mut a: i32 = 0;
-                        let mut b: i32 = 0;
-
-                        match stack.pop() {
-                            Some(stack_top) => a = stack_top,
-                            None => {
-                                print_err("unexpected stack underflow", pc);
-                            }
-                        }
-
-                        match stack.pop() {
-                            Some(stack_top) => b = stack_top,
-                            None => {
-                                print_err("unexpected stack underflow", pc);
-                            }
-                        }
+                        let mut a: i32 = pop(&mut stack, pc);
+                        let mut b: i32 = pop(&mut stack, pc);
 
                         if b > a {
                             pc = new_pc as usize;
@@ -434,22 +326,8 @@ fn main() {
                     let new_pc = i32::from_le_bytes(bytes) as usize;
 
                     if stack.len() >= 1 {
-                        let mut a: i32 = 0;
-                        let mut b: i32 = 0;
-
-                        match stack.pop() {
-                            Some(stack_top) => a = stack_top,
-                            None => {
-                                print_err("unexpected stack underflow", pc);
-                            }
-                        }
-
-                        match stack.pop() {
-                            Some(stack_top) => b = stack_top,
-                            None => {
-                                print_err("unexpected stack underflow", pc);
-                            }
-                        }
+                        let mut a: i32 = pop(&mut stack, pc);
+                        let mut b: i32 = pop(&mut stack, pc);
 
                         if b < a {
                             pc = new_pc as usize;
@@ -469,22 +347,8 @@ fn main() {
                     let new_pc = i32::from_le_bytes(bytes) as usize;
 
                     if stack.len() >= 1 {
-                        let mut a: i32 = 0;
-                        let mut b: i32 = 0;
-
-                        match stack.pop() {
-                            Some(stack_top) => a = stack_top,
-                            None => {
-                                print_err("unexpected stack underflow", pc);
-                            }
-                        }
-
-                        match stack.pop() {
-                            Some(stack_top) => b = stack_top,
-                            None => {
-                                print_err("unexpected stack underflow", pc);
-                            }
-                        }
+                        let mut a: i32 = pop(&mut stack, pc);
+                        let mut b: i32 = pop(&mut stack, pc);
 
                         if b >= a {
                             pc = new_pc as usize;
@@ -504,22 +368,8 @@ fn main() {
                     let new_pc = i32::from_le_bytes(bytes) as usize;
 
                     if stack.len() >= 1 {
-                        let mut a: i32 = 0;
-                        let mut b: i32 = 0;
-
-                        match stack.pop() {
-                            Some(stack_top) => a = stack_top,
-                            None => {
-                                print_err("unexpected stack underflow", pc);
-                            }
-                        }
-
-                        match stack.pop() {
-                            Some(stack_top) => b = stack_top,
-                            None => {
-                                print_err("unexpected stack underflow", pc);
-                            }
-                        }
+                        let mut a: i32 = pop(&mut stack, pc);
+                        let mut b: i32 = pop(&mut stack, pc);
 
                         if b <= a {
                             pc = new_pc as usize;
@@ -536,11 +386,7 @@ fn main() {
             Some(Opcode::Store) => {
                 if program.len() >= pc + 1 {
                     let loc = program[pc + 1] as usize;
-
-                    match stack.pop() {
-                        Some(stack_top) => vars[loc] = stack_top,
-                        None => print_err("stack too short for STORE", pc),
-                    }
+                    vars[loc] = pop(&mut stack, pc);
                     pc += 2;
                 } else {
                     print_err("missing argument for STORE", pc);
