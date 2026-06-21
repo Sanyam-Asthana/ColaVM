@@ -3,10 +3,9 @@
     <h4>A stack-based virtual machine ecosystem aimed at compact-sized binaries</h4>
 </div>
 
-
 # Introduction
 
-**ColaVM Suite** is a stack-based virtual machine ecosystem with a custom ISA aimed at producing compact-sized compiled binaries. 
+**ColaVM Suite** is a lightweight stack-based virtual machine ecosystem with a custom ISA aimed at producing compact-sized compiled binaries.
 
 A simple program which prints "Hello, World!" is compiled to a **can** (cola compiled binary) of just 15 bytes!
 
@@ -43,4 +42,3 @@ Run `python assemble.py <code path>` or `python3 assemble.py <code path>` (for M
 # Documentation
 
 The complete documentation and the specification of the ColaVM Suite can be found on the [website](https://colavm.vercel.app).
-
