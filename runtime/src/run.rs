@@ -183,6 +183,9 @@ pub fn execute_program(program: Vec<u8>) {
             Some(Opcode::Div) => {
                 if stack.len() >= 2 {
                     let a = pop(&mut stack, pc);
+                    if a == 0 {
+                        print_err("division by zero", pc);
+                    }
                     let b = pop(&mut stack, pc);
                     stack.push(b / a);
                 } else {
@@ -193,6 +196,9 @@ pub fn execute_program(program: Vec<u8>) {
             Some(Opcode::Mod) => {
                 if stack.len() >= 2 {
                     let a = pop(&mut stack, pc);
+                    if a == 0 {
+                        print_err("division by zero", pc);
+                    }
                     let b = pop(&mut stack, pc);
                     stack.push(b % a);
                 } else {
@@ -201,23 +207,27 @@ pub fn execute_program(program: Vec<u8>) {
                 pc += 1;
             }
             Some(Opcode::Char) => {
-                let mut length = program[pc + 1];
-                if stack.len() < length.into() {
-                    print_err("stack underflow", pc);
-                    pc += (length as usize) + 1;
-                    continue;
+                if let Some(byte_slice) = program.get(pc + 1..pc + 2) {
+                    let mut length = byte_slice[0];
+                    if stack.len() < length.into() {
+                        print_err("stack underflow", pc);
+                        pc += (length as usize) + 1;
+                        continue;
+                    }
+                    let buf = length;
+                    let mut chars_to_print = Vec::new();
+                    while length != 0 {
+                        chars_to_print
+                            .push(std::char::from_u32(pop(&mut stack, pc) as u32).unwrap_or('?'));
+                        length -= 1;
+                    }
+                    for c in chars_to_print.iter().rev() {
+                        print!("{}", c);
+                    }
+                    pc += (buf as usize) + 1;
+                } else {
+                    print_err("unexpected end of file", pc);
                 }
-                let buf = length;
-                let mut chars_to_print = Vec::new();
-                while length != 0 {
-                    chars_to_print
-                        .push(std::char::from_u32(pop(&mut stack, pc) as u32).unwrap_or('?'));
-                    length -= 1;
-                }
-                for c in chars_to_print.iter().rev() {
-                    print!("{}", c);
-                }
-                pc += (buf as usize) + 1;
             }
             Some(Opcode::Print8) => {
                 if let Some(byte_slice) = program.get(pc + 1..pc + 2) {
